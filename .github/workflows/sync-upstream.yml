@@ -30,8 +30,10 @@ jobs:
       - name: Merge upstream/main into main
         run: |
           git checkout main
-          # Try merge; if there are conflicts, abort and bail out cleanly
-          git merge upstream/main --no-edit || (echo "Merge conflict, aborting."; git merge --abort; exit 0)
+          git merge upstream/main --allow-unrelated-histories --no-edit || {
+            echo "Merge failed (probably real conflicts)."
+            exit 0
+          }
 
       - name: Push changes back to your fork
         uses: ad-m/github-push-action@v0.8.0
